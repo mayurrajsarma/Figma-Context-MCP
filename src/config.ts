@@ -64,7 +64,7 @@ export function getServerConfig(isStdioMode: boolean): ServerConfig {
     config.port = argv.port;
     config.configSources.port = "cli";
   } else if (process.env.PORT) {
-    config.port = parseInt(process.env.PORT, 10);
+    config.port = parseInt(process.env.PORT, 10);//Converts that string "4000" into the number 4000 as decimal
     config.configSources.port = "env";
   }
 
@@ -74,7 +74,7 @@ export function getServerConfig(isStdioMode: boolean): ServerConfig {
     process.exit(1);
   }
 
-  // Log configuration sources
+  // Log configuration sources only if HTTP mode .
   if (!isStdioMode) {
     console.log("\nConfiguration:");
     console.log(

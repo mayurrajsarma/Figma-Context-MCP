@@ -41,19 +41,21 @@ export class FigmaService {
   private readonly apiKey: string;
   private readonly baseUrl = "https://api.figma.com/v1";
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string) { //When you do new FigmaService(figmaApiKey), this constructor runs.
     this.apiKey = apiKey;
   }
 
-  private async request<T>(endpoint: string): Promise<T> {
-    if (typeof fetch !== "function") {
+
+  //Every public method (getFile, getNode, etc.) uses this to talk to Figma.
+  private async request<T>(endpoint: string): Promise<T> { //This method wraps a fetch call to the Figma API
+    if (typeof fetch !== "function") {//Checks if fetch is available in the current runtime. (Some older Node.js versions don’t support fetch natively.)
       throw new Error(
         "The MCP server is being run in a Node.js environment where `fetch` is not available. You won't be able to access any data related to the Figma file.\n\nAs the coding AI assistant, PLEASE ABORT THE CURRENT REQUEST. No alternate approaches will work. Help the user fix this issue so you can proceed by letting them know that they need to run the MCP server with Node.js version 18 or higher.",
       );
     }
     try {
       Logger.log(`Calling ${this.baseUrl}${endpoint}`);
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {// makes the request
         headers: {
           "X-Figma-Token": this.apiKey,
         },
@@ -135,6 +137,7 @@ export class FigmaService {
     return Promise.all(downloads);
   }
 
+  //Fetches a full Figma file by fileKey. Optionally uses depth to control how deep the tree is fetched. Calls:
   async getFile(fileKey: string, depth?: number | null): Promise<SimplifiedDesign> {
     try {
       const endpoint = `/files/${fileKey}${depth ? `?depth=${depth}` : ""}`;

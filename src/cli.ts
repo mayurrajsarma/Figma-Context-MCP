@@ -3,7 +3,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { config } from "dotenv";
 import { resolve } from "path";
-import { getServerConfig } from "./config.js";
+import { getServerConfig } from "./config.js";//Custom helper that reads figmaApiKey and port from CLI or .env.
 import { startHttpServer } from "./server.js";
 import { createServer } from "./mcp.js";
 
@@ -12,9 +12,18 @@ config({ path: resolve(process.cwd(), ".env") });
 
 export async function startServer(): Promise<void> {
   // Check if we're running in stdio mode (e.g., via CLI)
+  //process.argv is an array. It contains all arguments passed to the script — including Node itself and the file name.
   const isStdioMode = process.env.NODE_ENV === "cli" || process.argv.includes("--stdio");
 
   const config = getServerConfig(isStdioMode);
+  //Below shows the return type of getServerConfig
+  // const config =  {
+  //   figmaApiKey: string;
+  //   port: number;
+  //   configSources: {
+  //     figmaApiKey: "cli" | "env";
+  //     port: "cli" | "env" | "default";
+  //   };
 
   const server = createServer(config.figmaApiKey, { isHTTP: !isStdioMode });
 
