@@ -125,7 +125,7 @@ function registerTools(server: McpServer, figmaService: FigmaService): void {
           imageRef: string;
           fileName: string;
         }[];
-        const fillDownloads = figmaService.getImageFills(fileKey, imageFills, localPath);
+        const fillDownloads = figmaService.getImageFills(fileKey, imageFills, localPath);//here
         const renderRequests = nodes
           .filter(({ imageRef }) => !imageRef)
           .map(({ nodeId, fileName }) => ({
